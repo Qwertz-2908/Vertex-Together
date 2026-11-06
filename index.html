@@ -1,0 +1,160 @@
+```html
+
+<!DOCTYPE html>
+
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b18">
+<title>Vertex: Together — Multiplayer Arcade</title>
+<script src="https://mbltpqpvvaxaxdtxwevr.supabase.co/rest/v1/"></script>
+<style>
+:root{--bg:#090b18;--panel:#11162a;--panel2:#171e38;--line:rgba(160,174,255,.14);--text:#f3f5ff;--muted:#9ba5c5;--blue:#55a8ff;--purple:#9b72ff;--green:#55e0b0;--danger:#ff6f91;--radius:20px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,rgba(77,89,190,.20),transparent 38%),radial-gradient(ellipse at 90% 15%,rgba(130,64,220,.16),transparent 35%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,canvas{font:inherit}button{cursor:pointer;border:0;color:var(--text);font-weight:750;transition:.18s}button:disabled{opacity:.45;cursor:not-allowed}
+.topbar{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,72px);background:rgba(9,11,24,.7);backdrop-filter:blur(16px);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;font-weight:950;letter-spacing:1.5px;font-size:18px}.brand-mark{height:34px;width:34px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--purple));display:grid;place-items:center;box-shadow:0 0 24px #6b79ff55}.brand-mark:after{content:"V";font-weight:1000;color:white}
+.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green)}
+main{width:min(1080px,calc(100% - 36px));margin:0 auto;padding:58px 0 80px}.eyebrow{color:#a99aff;text-transform:uppercase;letter-spacing:3px;font-size:11px;font-weight:900}.hero{text-align:center;margin-bottom:42px}.hero h1{font-size:clamp(39px,7vw,72px);line-height:1.02;margin:14px 0;letter-spacing:-3px}.gradient{background:linear-gradient(100deg,#67c4ff,#9d83ff 55%,#d78cff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);font-size:16px;margin:0}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:780px;margin:0 auto}.card{background:linear-gradient(160deg,rgba(25,33,62,.94),rgba(15,20,39,.96));border:1px solid var(--line);border-radius:var(--radius);padding:25px;box-shadow:0 20px 70px #0003}.card h2{font-size:21px;margin:0 0 7px}.card p{font-size:13px;color:var(--muted);margin:0 0 20px;line-height:1.55}.card-icon{height:44px;width:44px;border-radius:14px;display:grid;place-items:center;font-size:21px;margin-bottom:18px;background:#4b9cff22;border:1px solid #62b1ff33}.card:nth-child(2) .card-icon{background:#9a70ff22;border-color:#a27bff44}
+.field{display:flex;flex-direction:column;gap:8px;margin:0 0 13px}.field label{font-size:11px;color:#b7c0dc;font-weight:800;text-transform:uppercase;letter-spacing:1px}.field input{width:100%;border:1px solid var(--line);background:#090e20;color:var(--text);padding:14px 15px;border-radius:12px;outline:none}.field input:focus{border-color:#7c8dff;box-shadow:0 0 0 3px #7c8dff20}.primary{width:100%;padding:14px 18px;border-radius:12px;background:linear-gradient(100deg,#398fff,#805eff);box-shadow:0 9px 25px #5b75ff35}.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}.secondary{padding:11px 15px;border:1px solid var(--line);border-radius:11px;background:#ffffff09}.secondary:hover{background:#ffffff13}.message{min-height:20px;margin-top:12px;font-size:12px;color:var(--danger);text-align:center}.fine{color:var(--muted);font-size:11px;text-align:center;margin-top:28px}
+.screen{display:none}.screen.active{display:block}.lobby-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}.lobby-head h1{font-size:clamp(30px,5vw,46px);margin:8px 0}.room-code{font-size:clamp(28px,5vw,40px);letter-spacing:8px;font-weight:950;color:#a9b7ff;background:#161d38;border:1px dashed #7188ff77;border-radius:15px;padding:15px 20px;text-align:center;white-space:nowrap}.lobby-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.section-title h2{font-size:17px;margin:0}.count{font-size:12px;color:var(--muted)}.players{display:grid;gap:10px}.player{display:flex;align-items:center;gap:12px;background:#ffffff06;border:1px solid var(--line);padding:12px;border-radius:13px}.avatar{height:38px;width:38px;border-radius:12px;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,#2d9cff,#855dff)}.player-name{font-weight:750;font-size:14px;flex:1}.player-tag{font-size:10px;color:#aeb8d8;background:#ffffff0b;padding:5px 8px;border-radius:20px}.ready-tag{font-size:11px;color:var(--green)}.lobby-controls{display:grid;gap:12px}.game-picker{display:grid;gap:10px}.game-choice{padding:15px;border-radius:14px;border:1px solid var(--line);background:#ffffff07;text-align:left}.game-choice.selected{border-color:#8d78ff;background:linear-gradient(135deg,#26305a,#28204c);box-shadow:0 0 0 2px #8d78ff18}.game-choice strong{display:block;margin:4px 0}.game-choice small{color:#bdc4e5;line-height:1.4}.notice{padding:13px 15px;background:#ffffff08;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px;line-height:1.5}.control-row{display:flex;gap:9px;flex-wrap:wrap}.control-row button{flex:1}
+.quiz-wrap{max-width:760px;margin:0 auto}.quiz-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin-bottom:15px}.progress{height:7px;background:#ffffff12;border-radius:10px;overflow:hidden;margin-bottom:26px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .3s}.question-card{padding:clamp(22px,5vw,38px);background:linear-gradient(145deg,#182342,#17172f);border:1px solid var(--line);border-radius:22px}.question-card h2{font-size:clamp(23px,4vw,32px);line-height:1.25;margin:8px 0 24px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.answer{padding:16px;text-align:left;border:1px solid var(--line);border-radius:13px;background:#ffffff08;min-height:62px}.answer:hover:not(:disabled){border-color:#8292ff;background:#748aff18}.answer.correct{border-color:var(--green);background:#55e0b018}.answer.wrong{border-color:var(--danger);background:#ff6f9118}.answer:disabled{opacity:1;cursor:default}.result{text-align:center;padding:30px}.result h2{font-size:38px;margin:10px}.score-list{display:grid;gap:9px;margin:20px 0}.score-row{display:flex;align-items:center;justify-content:space-between;background:#ffffff08;padding:13px 15px;border-radius:12px}
+.draw-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px}.draw-board{background:#f7f8ff;border-radius:17px;overflow:hidden;border:1px solid #ffffff33}.draw-board canvas{display:block;width:100%;height:390px;touch-action:none;cursor:crosshair}.draw-tools{display:flex;gap:8px;flex-wrap:wrap;padding:11px;background:#11162a}.draw-tools button{padding:8px 11px;border-radius:9px;background:#ffffff12;font-size:12px}.draw-tools button.active{background:#4b8fff}.draw-side{display:flex;flex-direction:column;gap:12px}.word-box{background:#28204c;border:1px solid #9b72ff55;padding:16px;border-radius:14px}.word-box strong{display:block;font-size:23px;letter-spacing:2px;margin-top:5px}.guess-list{height:245px;overflow:auto;display:flex;flex-direction:column;gap:8px}.guess{padding:9px 10px;border-radius:10px;background:#ffffff08;font-size:12px;overflow-wrap:anywhere}.guess b{color:#aabaff}.guess-form{display:flex;gap:7px}.guess-form input{min-width:0;flex:1;background:#090e20;color:white;border:1px solid var(--line);border-radius:10px;padding:11px}.guess-form button{padding:0 14px;border-radius:10px;background:linear-gradient(100deg,#398fff,#805eff)}
+@media(max-width:720px){main{padding-top:38px}.actions,.lobby-grid,.draw-layout{grid-template-columns:1fr}.lobby-head{display:block}.room-code{margin-top:18px}.topbar{height:65px}.answers{grid-template-columns:1fr}.hero h1{letter-spacing:-2px}.card{padding:21px}.draw-board canvas{height:300px}.guess-list{height:150px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark"></span> VERTEX: TOGETHER</div><div class="status"><span class="dot"></span><span id="connectionLabel">ARCADE READY</span></div></header>
+<main>
+<section id="homeScreen" class="screen active">
+ <div class="hero"><div class="eyebrow">A VERTEX SIDE PROJECT · PLAY TOGETHER</div><h1>YOUR CREW. YOUR GAME. <span class="gradient">YOUR ROOM.</span></h1><p>Quick multiplayer games with friends. One code gets everyone in.</p></div>
+ <div class="actions">
+  <article class="card"><div class="card-icon">✦</div><h2>Create a room</h2><p>Start a party, invite your friends and choose a game.</p><div class="field"><label for="hostName">Your username</label><input id="hostName" maxlength="16" placeholder="e.g. PixelPilot"></div><button class="primary" id="createBtn">Create game room ↗</button><div class="message" id="createMessage"></div></article>
+  <article class="card"><div class="card-icon">⌁</div><h2>Join a room</h2><p>Enter the five-character room code from your host.</p><div class="field"><label for="joinName">Your username</label><input id="joinName" maxlength="16" placeholder="e.g. NeonNinja"></div><div class="field"><label for="roomInput">Room code</label><input id="roomInput" maxlength="5" placeholder="ABCDE" style="text-transform:uppercase;letter-spacing:4px"></div><button class="primary" id="joinBtn">Join game room ↗</button><div class="message" id="joinMessage"></div></article>
+ </div><div class="fine">NO DOWNLOADS · NO ACCOUNTS · JUST GAMES</div>
+</section>
+<section id="lobbyScreen" class="screen">
+ <div class="lobby-head"><div><div class="eyebrow">THE PARTY IS GATHERING</div><h1>Game lobby</h1><div style="color:var(--muted);font-size:13px" id="lobbySubtitle">Waiting for players...</div></div><div><div class="eyebrow" style="text-align:center;margin-bottom:8px">ROOM CODE</div><div class="room-code" id="roomCodeDisplay">-----</div></div></div>
+ <div class="lobby-grid"><div class="card"><div class="section-title"><h2>Players in room</h2><span class="count" id="playerCount">0 players</span></div><div class="players" id="playerList"></div></div>
+ <div class="card lobby-controls"><div class="section-title"><h2>Choose a game</h2><span class="count">ARCADE</span></div>
+  <div class="game-picker">
+   <button class="game-choice selected" data-game="quickfire"><strong>⚡ QUICKFIRE</strong><small>Fast questions. Faster answers. Score points against your friends.</small></button>
+   <button class="game-choice" data-game="drawit"><strong>✏️ DRAW IT</strong><small>One player draws a secret word. Everyone else races to guess it.</small></button>
+  </div>
+  <div class="notice" id="hostNotice">The host starts the game when everyone is ready. At least two players are needed.</div>
+  <button class="primary" id="readyBtn">I'm ready ✓</button><button class="primary" id="startBtn" style="display:none">Start game ↗</button>
+  <div class="control-row"><button class="secondary" id="copyCodeBtn">Copy room code</button><button class="secondary" id="leaveBtn">Leave room</button></div><div class="message" id="lobbyMessage"></div>
+ </div></div>
+</section>
+<section id="quizScreen" class="screen"><div class="quiz-wrap"><div class="eyebrow">VERTEX: TOGETHER · QUICKFIRE</div><div class="quiz-top"><span id="questionNumber">QUESTION 1 / 5</span><span id="quizTimer">15s</span></div><div class="progress"><span id="progressBar"></span></div><div class="question-card"><div class="eyebrow">YOUR QUESTION</div><h2 id="questionText">Loading...</h2><div class="answers" id="answerButtons"></div></div><div class="notice" style="margin-top:14px;text-align:center" id="quizStatus">Choose your answer.</div></div></section>
+<section id="drawScreen" class="screen"><div class="quiz-wrap"><div class="eyebrow">VERTEX: TOGETHER · DRAW IT</div><div class="quiz-top"><span id="drawRoundLabel">ROUND 1</span><span id="drawTimer">60s</span></div><div class="progress"><span id="drawProgress"></span></div><div class="draw-layout"><div class="draw-board"><canvas id="drawingCanvas" width="900" height="560"></canvas><div class="draw-tools"><button class="active" data-colour="#20243a">Ink</button><button data-colour="#347dff">Blue</button><button data-colour="#a16cff">Purple</button><button data-colour="#f04f83">Pink</button><button data-colour="#25a979">Green</button><button id="eraserBtn">Eraser</button><button id="clearCanvasBtn">Clear</button></div></div><aside class="draw-side"><div class="word-box" id="wordBox"><span class="eyebrow">YOUR SECRET WORD</span><strong id="secretWord">••••••</strong><small id="drawerHint" style="color:#c9c5ed">Draw it so your friends can guess.</small></div><div class="card" style="padding:14px"><div class="section-title"><h2>Guesses</h2><span class="count" id="guessCount">0</span></div><div class="guess-list" id="guessList"></div><form class="guess-form" id="guessForm"><input id="guessInput" maxlength="40" placeholder="Type your guess..." autocomplete="off"><button>Send</button></form></div></aside></div><div class="notice" style="margin-top:13px" id="drawStatus">The drawer gets a secret word. Everyone else, start guessing!</div></div></section>
+<section id="resultsScreen" class="screen"><div class="quiz-wrap card result"><div class="eyebrow">ROUND COMPLETE</div><h2>GG!</h2><p style="color:var(--muted)">Here's how everyone did.</p><div class="score-list" id="scoreList"></div><button class="primary" id="backLobbyBtn">Back to lobby</button></div></section>
+</main><footer>VERTEX: TOGETHER · A VERTEX ASSOCIATION PROJECT</footer>
+<script>
+(() => {
+ const SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL";
+ const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
+ const $=id=>document.getElementById(id);
+ const configured=window.supabase&&SUPABASE_URL.startsWith("https://")&&!SUPABASE_URL.includes("YOUR_")&&!SUPABASE_ANON_KEY.includes("YOUR_");
+ const db=configured?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+ const state={channel:null,room:"",playerId:"",name:"",isHost:false,hostId:null,ready:false,players:{},selectedGame:"quickfire",game:null,questionIndex:0,answered:false,scores:{},timer:null,questionStartedAt:0,questionEndAt:0,drawRound:0,drawerId:null,secretWord:"",drawSeconds:60,guessed:{},drawColour:"#20243a",drawing:false,lastPoint:null};
+ const questions=[
+  {q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Mercury"],c:1},
+  {q:"How many sides does a hexagon have?",a:["Five","Six","Seven","Eight"],c:1},
+  {q:"What is the largest ocean on Earth?",a:["Atlantic","Indian","Arctic","Pacific"],c:3},
+  {q:"Which instrument has keys, pedals and strings?",a:["Violin","Piano","Flute","Drums"],c:1},
+  {q:"What is 12 × 8?",a:["86","92","96","108"],c:2}
+ ];
+ const drawWords=["Dinosaur","Rainbow","Volcano","Pineapple","Spaceship","Football","Elephant","Castle","Penguin","Guitar","Rocket","Waterfall","Sunglasses","Octopus","Snowman"];
+ const show=id=>{["homeScreen","lobbyScreen","quizScreen","drawScreen","resultsScreen"].forEach(s=>$(s).classList.toggle("active",s===id));};
+ const msg=(id,s)=>$(id).textContent=s||"";
+ const safe=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const makeCode=()=>{let s="",c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";for(let i=0;i<5;i++)s+=c[Math.floor(Math.random()*c.length)];return s;};
+ const newId=()=>crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2);
+ const nameClean=s=>s.trim().replace(/[<>]/g,"").slice(0,16);
+ function renderPlayers(){
+  const list=Object.values(state.players).sort((a,b)=>a.id===state.playerId?-1:b.id===state.playerId?1:a.name.localeCompare(b.name));
+  $("playerCount").textContent=`${list.length} player${list.length===1?"":"s"}`;
+  $("playerList").innerHTML=list.map(p=>`<div class="player"><div class="avatar">${safe((p.name||"?")[0].toUpperCase())}</div><div class="player-name">${safe(p.name)}</div>${p.id===state.hostId?'<span class="player-tag">HOST</span>':''}<span class="${p.ready?'ready-tag':'player-tag'}">${p.ready?'READY':'NOT READY'}</span></div>`).join("");
+  $("lobbySubtitle").textContent=`${list.length} connected · ${state.isHost?"You are hosting":"Waiting for the host"}`;
+  $("readyBtn").textContent=state.ready?"I'm not ready ↺":"I'm ready ✓";
+  $("readyBtn").style.display=state.isHost?"none":"block";$("startBtn").style.display=state.isHost?"block":"none";
+  $("startBtn").disabled=list.length<2||!list.every(p=>p.ready||p.id===state.hostId);
+ }
+ function syncPresence(){if(!state.channel)return;const ps=state.channel.presenceState(),players={};Object.values(ps).flat().forEach(p=>{if(p?.id)players[p.id]=p;});state.players=players;renderPlayers();}
+ async function send(event,payload){if(state.channel)await state.channel.send({type:"broadcast",event,payload});}
+ async function enterRoom(code,name,host){
+  if(!db)throw Error("Add your Supabase Project URL and anon key in the script before using multiplayer.");
+  state.room=code;state.name=name;state.playerId=newId();state.isHost=host;state.ready=host;state.hostId=host?state.playerId:null;state.players={};
+  $("roomCodeDisplay").textContent=code;$("connectionLabel").textContent="CONNECTING";
+  const ch=db.channel("vertex-together:"+code,{config:{presence:{key:state.playerId},broadcast:{self:false}}});state.channel=ch;
+  ch.on("presence",{event:"sync"},syncPresence);
+  ch.on("broadcast",{event:"host",callback:undefined},({payload})=>{if(payload?.id)state.hostId=payload.id;});
+  ch.on("broadcast",{event:"ready"},({payload})=>{if(payload?.id&&state.players[payload.id]){state.players[payload.id].ready=!!payload.ready;renderPlayers();}});
+  ch.on("broadcast",{event:"game-start"},({payload})=>{if(payload?.game==="quickfire")startQuickfire(payload);if(payload?.game==="drawit")startDrawIt(payload);});
+  ch.on("broadcast",{event:"quiz-answer"},({payload})=>{if(state.isHost&&payload?.round===state.game?.round)scoreQuizAnswer(payload);});
+  ch.on("broadcast",{event:"quiz-results"},({payload})=>{if(payload?.scores)showResults(payload.scores);});
+  ch.on("broadcast",{event:"draw-start"},({payload})=>startDrawIt(payload));
+  ch.on("broadcast",{event:"draw-stroke"},({payload})=>{if(payload?.round===state.drawRound)drawRemoteStroke(payload);});
+  ch.on("broadcast",{event:"draw-clear"},({payload})=>{if(payload?.round===state.drawRound)clearCanvas(false);});
+  ch.on("broadcast",{event:"draw-guess"},({payload})=>receiveGuess(payload));
+  ch.on("broadcast",{event:"draw-end"},({payload})=>{if(payload?.scores)showResults(payload.scores);});
+  await new Promise((resolve,reject)=>{
+   const timeout=setTimeout(()=>reject(Error("Connection timed out. Check your internet and try again.")),10000);
+   ch.subscribe(async status=>{
+    if(status==="SUBSCRIBED"){
+     clearTimeout(timeout);
+     const current=Object.values(ch.presenceState()).flat();
+     if(!host&&!current.some(p=>p?.isHost)){await ch.unsubscribe();state.channel=null;reject(Error("Room not found. Check the code and try again."));return;}
+     if(host){state.hostId=state.playerId;await send("host",{id:state.playerId});}
+     await ch.track({id:state.playerId,name:state.name,isHost:host,ready:host,joinedAt:Date.now()});
+     $("connectionLabel").textContent="CONNECTED";resolve();
+    }else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){clearTimeout(timeout);reject(Error("Couldn't connect. Check your Supabase Realtime settings."));}
+   });
+  });
+  syncPresence();show("lobbyScreen");
+ }
+ $("createBtn").onclick=async()=>{const n=nameClean($("hostName").value);msg("createMessage","");if(!n){msg("createMessage","Choose a username first.");return;}try{$("createBtn").disabled=true;await enterRoom(makeCode(),n,true);}catch(e){msg("createMessage",e.message);$("createBtn").disabled=false;}};
+ $("joinBtn").onclick=async()=>{const n=nameClean($("joinName").value),c=$("roomInput").value.trim().toUpperCase();msg("joinMessage","");if(!n){msg("joinMessage","Choose a username first.");return;}if(!/^[A-HJ-NP-Z2-9]{5}$/.test(c)){msg("joinMessage","Enter a valid 5-character code.");return;}try{$("joinBtn").disabled=true;await enterRoom(c,n,false);}catch(e){msg("joinMessage",e.message);$("joinBtn").disabled=false;}};
+ $("readyBtn").onclick=async()=>{state.ready=!state.ready;await state.channel.track({id:state.playerId,name:state.name,isHost:false,ready:state.ready,joinedAt:Date.now()});await send("ready",{id:state.playerId,ready:state.ready});if(state.players[state.playerId])state.players[state.playerId].ready=state.ready;renderPlayers();};
+ document.querySelectorAll(".game-choice").forEach(b=>b.onclick=()=>{if(!state.isHost)return;state.selectedGame=b.dataset.game;document.querySelectorAll(".game-choice").forEach(x=>x.classList.toggle("selected",x===b));});
+ $("startBtn").onclick=async()=>{const ps=Object.values(state.players);if(ps.length<2){msg("lobbyMessage","You need at least two players.");return;}if(!ps.every(p=>p.ready||p.id===state.hostId)){msg("lobbyMessage","Wait for everyone to be ready.");return;}if(state.selectedGame==="quickfire"){const payload={game:"quickfire",round:Date.now(),questions,startedAt:Date.now()};await send("game-start",payload);startQuickfire(payload);}else{const drawer=ps[Math.floor(Math.random()*ps.length)],word=drawWords[Math.floor(Math.random()*drawWords.length)];const payload={game:"drawit",round:Date.now(),drawerId:drawer.id,word,seconds:60,startedAt:Date.now()};await send("draw-start",payload);startDrawIt(payload);}};
+ function startQuickfire(payload){clearInterval(state.timer);state.game=payload;state.questionIndex=0;state.answered=false;state.scores={};Object.keys(state.players).forEach(id=>state.scores[id]=0);show("quizScreen");renderQuestion();}
+ function renderQuestion(){const q=state.game.questions[state.questionIndex];if(!q){endQuiz();return;}state.answered=false;state.questionStartedAt=Date.now();state.questionEndAt=Date.now()+15000;$("questionNumber").textContent=`QUESTION ${state.questionIndex+1} / ${state.game.questions.length}`;$("questionText").textContent=q.q;$("progressBar").style.width=`${state.questionIndex/state.game.questions.length*100}%`;$("quizStatus").textContent="Choose your answer. You have 15 seconds.";$("answerButtons").innerHTML=q.a.map((a,i)=>`<button class="answer" data-index="${i}">${"ABCD"[i]}. ${safe(a)}</button>`).join("");document.querySelectorAll(".answer").forEach(b=>b.onclick=()=>answerQuiz(Number(b.dataset.index)));quizTick();state.timer=setInterval(quizTick,200);}
+ function quizTick(){const r=Math.max(0,Math.ceil((state.questionEndAt-Date.now())/1000));$("quizTimer").textContent=r+"s";if(r===0&&!state.answered)answerQuiz(-1);}
+ async function answerQuiz(index){if(state.answered)return;state.answered=true;clearInterval(state.timer);const q=state.game.questions[state.questionIndex],correct=index===q.c,elapsed=Date.now()-state.questionStartedAt;document.querySelectorAll(".answer").forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");else if(i===index)b.classList.add("wrong");});$("quizStatus").textContent=correct?"Correct! Nice one.":"Not quite — keep going!";const payload={id:state.playerId,name:state.name,round:state.game.round,index,correct,elapsed};if(state.isHost)scoreQuizAnswer(payload);else await send("quiz-answer",payload);setTimeout(()=>{if(state.questionIndex<state.game.questions.length-1){state.questionIndex++;renderQuestion();}else endQuiz();},1500);}
+ function scoreQuizAnswer(p){if(!state.scores[p.id])state.scores[p.id]=0;if(p.correct)state.scores[p.id]+=Math.max(100,1000-Math.floor(p.elapsed/25));}
+ async function endQuiz(){clearInterval(state.timer);if(state.isHost){await send("quiz-results",{scores:state.scores});showResults(state.scores);}else{$("quizStatus").textContent="Round finished — waiting for the host's results...";}}
+ function showResults(scores){clearInterval(state.timer);const rows=Object.entries(scores).map(([id,score])=>({id,score,name:state.players[id]?.name||(id===state.playerId?state.name:"Player")})).sort((a,b)=>b.score-a.score);$("scoreList").innerHTML=rows.map((p,i)=>`<div class="score-row"><span>${i===0?"🏆":"#"+(i+1)} &nbsp;${safe(p.name)}</span><strong>${Number(p.score).toLocaleString()} pts</strong></div>`).join("");show("resultsScreen");}
+
+
+// DRAW IT — the host chooses a drawer and secret word; drawing strokes and guesses sync live.
+const canvas=$("drawingCanvas"),ctx=canvas.getContext("2d");
+function clearCanvas(broadcast=true){ctx.fillStyle="#f7f8ff";ctx.fillRect(0,0,canvas.width,canvas.height);if(broadcast)send("draw-clear",{round:state.drawRound});}
+clearCanvas(false);
+function startDrawIt(p){clearInterval(state.timer);state.game=p;state.drawRound=p.round;state.drawerId=p.drawerId;state.secretWord=p.word;state.drawSeconds=p.seconds||60;state.guessed={};state.scores={};Object.keys(state.players).forEach(id=>state.scores[id]=0);clearCanvas(false);$("drawRoundLabel").textContent="DRAW ROUND";$("drawTimer").textContent=state.drawSeconds+"s";const drawer=state.drawerId===state.playerId; $("secretWord").textContent=drawer?p.word.toUpperCase():"GUESS IT!";$("drawerHint").textContent=drawer?"Draw the word. Don't type it in the chat.":"Watch the drawing and send your guess below.";canvas.style.cursor=drawer?"crosshair":"default";$("guessInput").disabled=drawer;$("guessForm").querySelector("button").disabled=drawer;$("guessList").innerHTML="";$("guessCount").textContent="0";$("drawStatus").textContent=drawer?"You're drawing! Everyone else is trying to guess.":"Someone is drawing. Type your guess below!";show("drawScreen");let end=Date.now()+state.drawSeconds1000;const tick=()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));$("drawTimer").textContent=left+"s";$("drawProgress").style.width=((state.drawSeconds-left)/state.drawSeconds100)+"%";if(left<=0){clearInterval(state.timer);finishDraw();}};tick();state.timer=setInterval(tick,200);}
+function pointFromEvent(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.widthcanvas.width,y:(e.clientY-r.top)/r.heightcanvas.height};}
+function paintStroke(p){ctx.strokeStyle=p.colour;ctx.lineWidth=p.width||7;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(p.x1,p.y1);ctx.lineTo(p.x2,p.y2);ctx.stroke();}
+function drawRemoteStroke(p){paintStroke(p);}
+canvas.addEventListener("pointerdown",e=>{if(state.drawerId!==state.playerId)return;state.drawing=true;state.lastPoint=pointFromEvent(e);canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener("pointermove",e=>{if(!state.drawing||state.drawerId!==state.playerId)return;const p=pointFromEvent(e),last=state.lastPoint;if(!last)return;const stroke={round:state.drawRound,x1:last.x,y1:last.y,x2:p.x,y2:p.y,colour:state.drawColour,width:state.drawColour==="#f7f8ff"?25:7};paintStroke(stroke);send("draw-stroke",stroke);state.lastPoint=p;});
+function stopDrawing(){state.drawing=false;state.lastPoint=null;}canvas.addEventListener("pointerup",stopDrawing);canvas.addEventListener("pointercancel",stopDrawing);canvas.addEventListener("pointerleave",stopDrawing);
+document.querySelectorAll("[data-colour]").forEach(b=>b.onclick=()=>{state.drawColour=b.dataset.colour;document.querySelectorAll("[data-colour]").forEach(x=>x.classList.toggle("active",x===b));});
+$("eraserBtn").onclick=()=>{state.drawColour="#f7f8ff";document.querySelectorAll("[data-colour]").forEach(x=>x.classList.remove("active"));};
+$("clearCanvasBtn").onclick=()=>{if(state.drawerId===state.playerId)clearCanvas(true);};
+$("guessForm").onsubmit=async e=>{e.preventDefault();const guess=$("guessInput").value.trim();if(!guess||state.drawerId===state.playerId)return;$("guessInput").value="";await send("draw-guess",{id:state.playerId,name:state.name,guess,round:state.drawRound});};
+function receiveGuess(p){if(!p||p.round!==state.drawRound||state.guessed[p.id])return;const line=document.createElement("div");line.className="guess";line.innerHTML=<b>${safe(p.name)}:</b> ${safe(p.guess)};$("guessList").appendChild(line);$("guessList").scrollTop=$("guessList").scrollHeight;$("guessCount").textContent=String(Number($("guessCount").textContent)+1);if(p.guess.trim().toLowerCase()===state.secretWord.toLowerCase()&&p.id!==state.drawerId){state.guessed[p.id]=true;state.scores[p.id]=(state.scores[p.id]||0)+1000;state.scores[state.drawerId]=(state.scores[state.drawerId]||0)+500;$("drawStatus").textContent=p.name+" guessed it!";if(state.isHost){send("draw-end",{scores:state.scores});setTimeout(()=>showResults(state.scores),1200);}}}
+async function finishDraw(){if(state.isHost){await send("draw-end",{scores:state.scores});showResults(state.scores);}else{$("drawStatus").textContent="Time is up — waiting for the host.";}}
+$("copyCodeBtn").onclick=async()=>{try{await navigator.clipboard.writeText(state.room);$("copyCodeBtn").textContent="Copied ✓";setTimeout(()=>$("copyCodeBtn").textContent="Copy room code",1400);}catch{msg("lobbyMessage","Room code: "+state.room);}};
+async function leave(){clearInterval(state.timer);if(state.channel){await state.channel.untrack();await state.channel.unsubscribe();}state.channel=null;state.room="";state.game=null;state.players={};state.isHost=false;$("connectionLabel").textContent="ARCADE READY";$("createBtn").disabled=false;$("joinBtn").disabled=false;show("homeScreen");}
+$("leaveBtn").onclick=leave;$("backLobbyBtn").onclick=()=>{state.game=null;show("lobbyScreen");};
+if(!db){$("connectionLabel").textContent="SETUP REQUIRED";msg("createMessage","Add your Supabase URL and anon key in the script to enable multiplayer.");}
+})();
+</script>
+
+</body>
+</html>
+```
